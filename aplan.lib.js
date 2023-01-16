@@ -1,5 +1,5 @@
 // global vars
-var str_uri = 'https://remote.jugendbuero.be';
+var str_uri = 'REPLACE_URL';
 var selected_app = '';
 
 // public functions
