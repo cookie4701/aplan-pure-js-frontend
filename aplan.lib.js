@@ -1,6 +1,5 @@
 // global vars
-//var str_uri = 'REPLACE_URL';
-var str_uri = 'https://testing.jugendbuero.duckdns.org';
+var str_uri = 'REPLACE_URL';
 
 var selected_app = '';
 
