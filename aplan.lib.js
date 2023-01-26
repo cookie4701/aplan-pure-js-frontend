@@ -1,5 +1,7 @@
 // global vars
-var str_uri = 'REPLACE_URL';
+//var str_uri = 'REPLACE_URL';
+var str_uri = 'https://testing.jugendbuero.duckdns.org';
+
 var selected_app = '';
 
 // public functions
@@ -12,7 +14,7 @@ function attach_handlers() {
 	attach_handler('passwordchange', show_app_pwchange);
 	attach_handler('btnsubmit_pwchange', update_password);
 	attach_handler('workareas_show', show_workareas);
-	attach_handler('btnsubmit_workareas_change', update_workareas);
+	//attach_handler('btnsubmit_workareas_change', update_workareas);
 }
 
 function attach_handler(buttonid, cb_function) {
@@ -44,7 +46,7 @@ function show_workareas(e) {
 		var arr = JSON.parse(data);
 		for (var i=0; i < arr.length; i++ ) {
 			var row = document.createElement('div');
-			row.setAttribute('class', 'row');
+			row.setAttribute('class', 'workarea-row');
 			
 			var col_short = document.createElement('div');
 			col_short.setAttribute('class', 'cell-1');
@@ -59,6 +61,7 @@ function show_workareas(e) {
 			input_hidden_id.id = 'rank-' + arr[i].idWorkarea;
 			input_hidden_id.value = arr[i].idWorkarea;
 			input_hidden_id.setAttribute("type", "hidden");
+			input_hidden_id.setAttribute("class", "hidden-id");
 			
 			col_short.append(input_short);
 			col_short.append(input_hidden_id);
@@ -114,23 +117,61 @@ function show_workareas(e) {
 }
 
 function workarea_change(event) {
-	console.log('event changed happened: ' + event.target.id);
+	//console.log('event changed happened: ' + event.target.id);
 	var arr_target = event.target.id.split('-');
 	if ( arr_target.length != 2 ) {
 		console.log('Need two array elements in arr_target');
 		return;
 	}
 	
+	el = document.getElementById(event.target.id);
+	var data = {};
+	var url_req = str_uri;
 	if ( arr_target[0] === 'short' ) {
+		let shorttext = document.getElementById('short-' + arr_target[1]).value;
+		data = {"idWorkarea" : arr_target[1], "short" : shorttext };
+		url_req += '/rest/workareas/update_short.php';
 	} else if ( arr_target[0] === 'explanation' ) {
+		let explanation = document.getElementById('explanation-' + arr_target[1]).value;
+		data = {"idWorkarea" : arr_target[1], "explanation" : explanation };
+		url_req += '/rest/workareas/update_explanation.php';
 	} else if ( arr_target[0] === 'time' ) {
+		let timecapital = document.getElementById('time-' + arr_target[1]).value;
+		data = {"idWorkarea" : arr_target[1], "timecapital" : timecapital };
+		url_req += '/rest/workareas/update_timecapital.php';
 	} else if ( arr_target[0] === 'visible' ) {
+		let visible = document.getElementById('visible-' + arr_target[1]).checked;
+		data = {"idWorkarea" : arr_target[1], "visible" : visible };
+		url_req += '/rest/workareas/update_visible.php';
 	} else {
 		console.log('unkown id');
 		return;
 	}
+	// post data
+	post_ajax(
+		url_req,
+		data,
+		(data) => {
+			let r = JSON.parse(data);
+			if (r.code == 500 )
+			{
+				set_info("Es gab ein Problem beim Speichern des Arbeitsbereichs " + r.message);
+				
+			}
+			else {
+				set_info('Arbeitsbereich wurde gespeichert!');	
+			}
+			
+			selected_app = 'workareas';
+			build_gui();
+			
+		},
+		(data) => {
+			set_error('Es gab einen Fehler beim Ändern des Arbeitsbereich! ' + data);
+		}
+	);
 }
-
+/*
 function update_workareas(e) {
 	e = e || window.event;
 	if (e.preventDefault) {
@@ -140,6 +181,29 @@ function update_workareas(e) {
 	}
 	
 	// collect data
+	var data = [];
+	
+	let rows = document.getElementsByClassName('hidden-id');
+	for (var i=0; i < rows.length; i++ )
+	{
+		let el = rows.item(i);
+		id = el.value;
+		let shorttext = document.getElementById('short-' + id).value;
+		let explanation = document.getElementById('explanation-' + id).value;
+		let timeval = document.getElementById('time-' + id).value;
+		let visible = document.getElementById('visible-' + id).checked;
+		
+		if (visible) {
+			let tmp = {
+				"id" : id,
+				
+		}
+		
+		console.log('short: ' + shorttext + ' visible: ' + visible);
+	}
+	
+	return;
+	
 	
 	
 	// post data
@@ -158,6 +222,7 @@ function update_workareas(e) {
 		}
 	);
 }
+*/
 	
 function update_password(e) {
 	e = e || window.event;
@@ -189,7 +254,7 @@ function update_password(e) {
 			
 		},
 		(data) => {
-			set_error('Es gab einen Fehler beim Ändern des Passworts!');
+			set_error('Es gab einen Fehler beim Ändern des Passworts! ' + data);
 		}
 	);
 }

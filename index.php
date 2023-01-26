@@ -5,10 +5,11 @@
 <link rel="stylesheet" href="pure-min.css">
 <script src="aplan.lib.js"></script>
 <title>Arbeitsplan - PureJS Version</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
 <body>
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	
 	<?php require_once("menu.php"); ?>
 		
 	<div class="main" id="content" class="container">
@@ -16,11 +17,12 @@
 		<?php require_once("login.php"); ?>
 		<?php require_once("pwchange.php"); ?>
 		<?php require_once("workareas.php"); ?>
+		<div id="userinfo"></div>
 	</div>
 	
 	<?php require_once("footer.php"); ?> 
 	
-	<script>
+	<script type="text/javascript">
 	
 	document.addEventListener('DOMContentLoaded', (event) => {
 		//the event occurred
