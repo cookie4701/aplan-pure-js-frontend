@@ -1,6 +1,7 @@
 // global vars
 var str_uri = 'REPLACE_URL';
 
+
 var selected_app = '';
 
 // public functions
@@ -13,7 +14,7 @@ function attach_handlers() {
 	attach_handler('passwordchange', show_app_pwchange);
 	attach_handler('btnsubmit_pwchange', update_password);
 	attach_handler('workareas_show', show_workareas);
-	//attach_handler('btnsubmit_workareas_change', update_workareas);
+	attach_handler('btnsubmit_workareas_add', add_workarea);
 }
 
 function attach_handler(buttonid, cb_function) {
@@ -56,14 +57,22 @@ function show_workareas(e) {
 			input_short.addEventListener('change', workarea_change);
 			
 			// create hidden entry for rank 
+			var input_hidden_rank = document.createElement('input');
+			input_hidden_rank.id = 'rank-' + arr[i].idWorkarea;
+			input_hidden_rank.value = arr[i].rank;
+			input_hidden_rank.setAttribute("type", "hidden");
+			input_hidden_rank.setAttribute("class", "hidden-rank");
+			
+			// create hidden entry for id 
 			var input_hidden_id = document.createElement('input');
-			input_hidden_id.id = 'rank-' + arr[i].idWorkarea;
+			input_hidden_id.id = 'id-' + arr[i].idWorkarea;
 			input_hidden_id.value = arr[i].idWorkarea;
 			input_hidden_id.setAttribute("type", "hidden");
 			input_hidden_id.setAttribute("class", "hidden-id");
 			
 			col_short.append(input_short);
 			col_short.append(input_hidden_id);
+			col_short.append(input_hidden_rank);
 			
 			var col_explanation = document.createElement('div');
 			col_explanation.setAttribute('class', 'cell-2');
@@ -113,6 +122,46 @@ function show_workareas(e) {
 		console.log('error: ' + data);
 	});
 	build_gui();
+}
+
+function add_workarea(e) {
+	e = e || window.event;
+	if (e.preventDefault) {
+		e.preventDefault();
+	} else {
+		e.returnValue = false;
+	}
+	
+	reset_messages();
+	//let table_wa = document.getElementById('table_workareas');
+	let next_rank = 1;
+	let rows = document.getElementsByClassName('hidden-rank');
+	Array.from(rows).forEach((row) => {
+    	let r = row.value;
+    	if ( r > next_rank ) next_rank = r;
+    
+	});
+	
+	next_rank++;
+	let data = {
+		"timecapital" : "1",
+		"explanation" : "Lang",
+		"description" : "Kurz",
+		"rank" : next_rank
+	};
+	let url = str_uri + '/rest/workareas/create.php';
+	post_ajax(url, data,
+	(res) => {
+		show_workareas(e);
+	},
+	(err) => {
+		set_info("Es gab ein Problem: " + err)
+	}
+	);
+	
+	
+	
+	
 }
 
 function workarea_change(event) {

@@ -14,7 +14,7 @@
 		</div>
 		
 		<div>
-			<button type="submit" id="btnsubmit_workareas_change">Speichern</button>
+			<button type="submit" id="btnsubmit_workareas_add">Zeile hinzufügen</button>
 		</div>
 	</form>
 </div>
