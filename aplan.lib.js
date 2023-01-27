@@ -2,6 +2,7 @@
 var str_uri = 'REPLACE_URL';
 
 
+
 var selected_app = '';
 
 // public functions
@@ -58,7 +59,7 @@ function show_workareas(e) {
 			
 			// create hidden entry for rank 
 			var input_hidden_rank = document.createElement('input');
-			input_hidden_rank.id = 'rank-' + arr[i].idWorkarea;
+			input_hidden_rank.id = 'rank-' + arr[i].id;
 			input_hidden_rank.value = arr[i].rank;
 			input_hidden_rank.setAttribute("type", "hidden");
 			input_hidden_rank.setAttribute("class", "hidden-rank");
@@ -124,7 +125,7 @@ function show_workareas(e) {
 	build_gui();
 }
 
-function add_workarea(e) {
+async function add_workarea(e) {
 	e = e || window.event;
 	if (e.preventDefault) {
 		e.preventDefault();
@@ -136,13 +137,14 @@ function add_workarea(e) {
 	//let table_wa = document.getElementById('table_workareas');
 	let next_rank = 1;
 	let rows = document.getElementsByClassName('hidden-rank');
-	Array.from(rows).forEach((row) => {
-    	let r = row.value;
-    	if ( r > next_rank ) next_rank = r;
+	Array.from(rows).forEach(async (row) => {
+    	var  r = parseInt( row.value );
+    	if ( r >= next_rank ) next_rank = r+1;
+    	
+    	console.log("r " + r);
     
 	});
 	
-	next_rank++;
 	let data = {
 		"timecapital" : "1",
 		"explanation" : "Lang",
