@@ -1,8 +1,6 @@
 // global vars
 var str_uri = 'REPLACE_URL';
 
-
-
 var selected_app = '';
 
 // public functions
@@ -134,7 +132,7 @@ async function add_workarea(e) {
 	}
 	
 	reset_messages();
-	//let table_wa = document.getElementById('table_workareas');
+
 	let next_rank = 1;
 	let rows = document.getElementsByClassName('hidden-rank');
 	Array.from(rows).forEach(async (row) => {
@@ -221,58 +219,6 @@ function workarea_change(event) {
 		}
 	);
 }
-/*
-function update_workareas(e) {
-	e = e || window.event;
-	if (e.preventDefault) {
-		e.preventDefault();
-	} else {
-		e.returnValue = false;
-	}
-	
-	// collect data
-	var data = [];
-	
-	let rows = document.getElementsByClassName('hidden-id');
-	for (var i=0; i < rows.length; i++ )
-	{
-		let el = rows.item(i);
-		id = el.value;
-		let shorttext = document.getElementById('short-' + id).value;
-		let explanation = document.getElementById('explanation-' + id).value;
-		let timeval = document.getElementById('time-' + id).value;
-		let visible = document.getElementById('visible-' + id).checked;
-		
-		if (visible) {
-			let tmp = {
-				"id" : id,
-				
-		}
-		
-		console.log('short: ' + shorttext + ' visible: ' + visible);
-	}
-	
-	return;
-	
-	
-	
-	// post data
-	post_ajax(
-		str_uri + '/rest/workareas/update.php',
-		data,
-		(data) => {
-			set_info('Arbeitsbereiche wurden gespeichert!');
-			console.log('success: ' + data);
-			selected_app = 'workareas';
-			build_gui();
-			
-		},
-		(data) => {
-			set_error('Es gab einen Fehler beim Ändern des Passworts!');
-		}
-	);
-}
-*/
 	
 function update_password(e) {
 	e = e || window.event;
