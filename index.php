@@ -17,6 +17,7 @@
 		<?php require_once("login.php"); ?>
 		<?php require_once("pwchange.php"); ?>
 		<?php require_once("workareas.php"); ?>
+		<div id="dynamic_content"></div>
 		<div id="userinfo"></div>
 	</div>
 	
