@@ -14,6 +14,8 @@ function attach_handlers() {
 	attach_handler('btnsubmit_pwchange', update_password);
 	attach_handler('workareas_show', show_workareas);
 	attach_handler('btnsubmit_workareas_add', add_workarea);
+	attach_handler('btn_create_user', create_user );
+	attach_handler('create_new_user', frm_create_user);
 }
 
 function attach_handler(buttonid, cb_function) {
@@ -23,6 +25,87 @@ function attach_handler(buttonid, cb_function) {
 	}
 	else 
 		btn.attachEvent("click", cb_function);
+}
+
+function frm_create_user(e) {
+	e = e || window.event;
+	if (e.preventDefault) {
+		e.preventDefault();
+	} else {
+		e.returnValue = false;
+	}
+	
+	selected_app = 'create_user';
+	reset_messages();
+	get_ajax('create_user.html', (data) => {
+		// do something
+		let widget_div = document.getElementById('dynamic_content');
+		widget_div.innerHTML = data;
+	}, 
+	(err) => {
+		set_error('Es gab einen Fehler: ' + err);
+	});
+}
+
+function get_day_pair(dayname) {
+	let r = [];
+	
+	if (document.getElementById('create_user_' + dayname + '_start').value != "" 
+		&& document.getElementById('create_user_' + dayname + '_end').value != "" ) {
+	
+		r.push_back(document.getElementById('create_user_' + dayname + '_start').value);
+		r.push_back(document.getElementById('create_user_' + dayname + '_end').value);		
+	}
+	
+	return r;
+}
+function create_user(e) {
+	e = e || window.event;
+	if (e.preventDefault) {
+		e.preventDefault();
+	} else {
+		e.returnValue = false;
+	}
+	
+	reset_messages();
+	selected_app = 'create_user';
+	
+	let data = {
+		"username" : document.getElementById('createuser_username'),
+		"displayname" : document.getElementById('createuser_displayname'),
+		"email" : document.getElementById('createuser_email'),
+		"password" : document.getElementById('createuser_password'),
+		"cpassword" : document.getElementById('createuser_cpassword'),
+		"startdate" : document.getElementById('createuser_startdate'),
+		"hollidays" : document.getElementById('createuser_hollidays'),
+		"vacaction" : document.getElementById('createuser_vacation'),
+		"drive" : document.getElementById('createuser_drive'),
+		"monday" : get_day_pair("monday"),
+		"tuesday" : get_day_pair("tuesday"),
+		"wednesday" : get_day_pair("wednesday"),
+		"thursday" : get_day_pair("thursday"),
+		"friday" : get_day_pair("friday")		
+	};
+	
+	let url = str_uri + '/rest/moderation/users/create.php';
+	post_ajax(url, data,
+	(res) => {
+		var arr = JSON.parse(res);
+		if (arr.code == 200) {
+			// ok
+		} else {
+			if (arr.message != "") {
+				set_error("Es gab ein Problem: " + arr.message);	
+			} else {
+				set_error("Es gab ein unbekanntes Problem");
+			}
+			
+		}
+	},
+	(err) => {
+		set_info("Es gab ein Problem: " + err)
+	}
+	);
 }
 
 function show_workareas(e) {

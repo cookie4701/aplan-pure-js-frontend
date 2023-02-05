@@ -4,6 +4,10 @@
 	<div class="pure-menu-heading pure-menu-link menuitem normal-user"><a id="workareas_show">Arbeitsbereiche bearbeiten</a></div>
 	
 	
-	<!--  <div class="pure-menu-heading pure-menu-link menuitem moderator"><a id="create_new_user">Neuen Benutzer erstellen</a></div> -->
+	<div class="pure-menu-heading pure-menu-link menuitem moderator">
+		<a id="create_new_user">Neuen Benutzer erstellen</a>
+	
+	</div>
+	
 	<div class="pure-menu-heading pure-menu-link menuitem normal-user"><a id="logout">Logout</a></div>
 </div>
