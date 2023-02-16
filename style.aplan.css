@@ -53,7 +53,7 @@
 	width: 20%;
 	display: inline-block;
 	text-align: center;
-	
+
 }
 
 .cell-2 {
@@ -81,7 +81,7 @@
 }
 
 #create_new_user:hover {
-	
+
 }
 
 /* Form fields */
@@ -96,9 +96,9 @@
   	border-width: 3px;
   	border-color: grey;
   	border-radius: 3px;
-  	
+
   	margin-bottom: 4px;
-  	
+
   	display: flex;
 }
 
@@ -108,7 +108,7 @@
 	display: inline-block;
 	padding: 2px;
 	margin: 0px;
-	font-weight: bold;	
+	font-weight: bold;
 }
 
 .txt_field input {
@@ -134,4 +134,9 @@
 	font-size: 16px;
 	margin: 4px 2px;
 	cursor: pointer;
+}
+
+/* */
+.day {
+  text-emphasis: bold;
 }
