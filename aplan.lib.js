@@ -2,6 +2,8 @@
 //var str_uri = 'REPLACE_URL';
 var str_uri = "https://testing.jugendbuero.duckdns.org";
 
+var moderation_id_schedule = -1;
+
 var selected_app = '';
 
 // public functions
@@ -45,8 +47,8 @@ function frm_mod_schedules(e) {
       build_gui();
       var sel = document.getElementById('mod_schedule_list_users_select');
       sel.addEventListener('change', btn_schedules_load_single_user);
-      //btn_schedules_load_single_user
       load_users();
+      hide_div_by_id('mod_schedule_user_new_pair');
     },
 
     (err) => {
@@ -116,16 +118,26 @@ function btn_schedules_load_single_user(e) {
 
 function edit_schedule (e) {
 	selected_app = 'dynamic_content';
+
 	let idSchedule = e.currentTarget.idSchedule;
-	let data = {
+  let idUser = parseInt(e.currentTarget.userId);
+
+  load_schedule(idSchedule, idUser);
+  show_div_by_id('mod_schedule_user_new_pair');
+}
+
+function load_schedule(idSchedule, idUser) {
+
+  let data = {
     "schedule" : {
 		    "idSchedule" : idSchedule,
-		      "userId" : parseInt(e.currentTarget.userId)
+		      "userId" : idUser
     }
 	};
 
 	post_ajax(str_uri + '/rest/moderation/users/user_scheduleitems_read.php', data,
 	(res) => {
+    moderation_id_schedule = idSchedule;
 		var arr = JSON.parse(res);
     var table = document.getElementById('mod_schedule_user_setup_table');
     empty(table);
@@ -163,10 +175,19 @@ function edit_schedule (e) {
       input_time_to.id = "to-" + arr[i].idScheduleItem
       input_time_to.addEventListener("blur", schedule_save_worktime)
 
+      var button_delete_pair = document.createElement('button');
+      button_delete_pair.innerHTML = "X";
+      //button_delete_pair.classList.add('pure-button');
+      button_delete_pair.classList.add('button-warning');
+      button_delete_pair.id = "delete-" + arr[i].idScheduleItem;
+      button_delete_pair.addEventListener("click", moderation_schedules_button_delete_pair);
+
       cell_day.append(input_hidden_day_of_week);
 
       cell_worktime.append(input_time_from);
       cell_worktime.append(input_time_to);
+
+      cell_actions.append(button_delete_pair);
 
       row.append(cell_day);
       row.append(cell_worktime);
@@ -181,6 +202,28 @@ function edit_schedule (e) {
 	}
 	);
 
+}
+
+function moderation_schedules_button_delete_pair (ev) {
+  var parts = ev.target.id.split("-");
+  if (parts.length !== 2 ||parts[0] !== "delete") return;
+  var obj_select = document.getElementById('mod_schedule_list_users_select');
+  var id = obj_select.value;
+  var data = {
+    "userId" : id,
+    "idScheduleItem" : parts[1]
+  };
+
+  post_ajax(str_uri + '/rest/moderation/users/user_scheduleitem_delete.php', data,
+    (response) => {
+      ev.target.parentElement.parentElement.remove();
+      set_info('Eintrag wurde erfolgreich gelöscht');
+      calcTime();
+    },
+
+    (error) => {
+      set_error('Es gab ein Problem');
+    } );
 }
 
 function schedule_save_worktime (ev) {
@@ -224,6 +267,32 @@ function schedule_save_worktime (ev) {
   );
 }
 
+function moderation_schedule_add_new_pair () {
+  var data = {
+    "userId" : 1,
+    "scheduleitems" : [
+      {
+        "idSchedule" : moderation_id_schedule,
+        "day" : parseInt( document.getElementById('mod_schedule_user_new_pair_select').value ),
+        "time_from" : document.getElementById('mod_schedule_user_new_pair_from').value,
+        "time_to" : document.getElementById('mod_schedule_user_new_pair_to').value
+      }
+    ]
+  };
+
+  post_ajax(str_uri + '/rest/moderation/users/user_scheduleitem_create.php',
+    data,
+    (response) => {
+      if (response === "\"ok\"") {
+        set_info('Eintrag gespeichert');
+        load_schedule(moderation_id_schedule, 0);
+    } else {
+      set_error("Es gab ein Problem");
+    }
+    },
+    (err) => {}
+  );
+}
 
 function load_users() {
   get_ajax(str_uri + '/rest/moderation/users/list.php?orgacode=jbuero2020&page=1&nbritems=1000', (data) => {
@@ -721,6 +790,7 @@ function hide_everything() {
   hide_div_by_id('login');
   hide_div_by_id('pwchange');
   hide_div_by_id('workareas');
+  hide_div_by_id('dynamic_content');
 }
 
 function show_menu() {
