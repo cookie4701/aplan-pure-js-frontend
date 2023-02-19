@@ -1,9 +1,9 @@
-<html lang="de">
+<!DOCTYPE html>
 
 <head>
 <link rel="stylesheet" href="style.aplan.css">
 <link rel="stylesheet" href="pure-min.css">
-<script src="aplan.lib.js"></script>
+<script src="./aplan.lib.js" type="module"></script>
 <title>Arbeitsplan - PureJS Version</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
@@ -36,14 +36,9 @@
 
 
 
-	<script type="text/javascript">
+	<script type="application/javascript">
 
-	document.addEventListener('DOMContentLoaded', (event) => {
-		//the event occurred
-		hide_everything();
-		build_gui();
-		attach_handlers();
-	});
+
 
 	</script>
 </body>
