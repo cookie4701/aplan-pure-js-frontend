@@ -256,7 +256,10 @@ export function schedule_save_worktime (ev) {
 
   post_ajax(window.str_uri + '/rest/moderation/users/user_scheduleitem_update.php', data,
     // success
-    (response) => {},
+    (response) => {
+      set_info("Arbeitszeit erfolgreich angepasst");
+      calcTime();
+    },
     // error
     (error) => {}
   );
