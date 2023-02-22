@@ -2,12 +2,47 @@
 import { reset_messages } from "./messages.js";
 import { get_ajax, post_ajax} from "./ajax.js";
 import { build_gui, hide_div_by_id, show_div_by_id, set_info, set_error } from "./gui.js";
-import { empty, convertLocalDateStringToDatabaseString, convertDatabaseDateStringToLocalDateString, calcTime, getDayname } from "./tools.js";
+import {
+  empty,
+  convertLocalDateStringToDatabaseString,
+  convertDatabaseDateStringToLocalDateString,
+  calcTime,
+  getDayname,
+  string_garbage
+} from "./tools.js";
 
 var moderation_id_schedule = -1;
 
 export function moderation_schedule_save(ev) {
-  console.log(ev.target.id);
+  var parts = ev.target.id.split("-");
+  if (parts.length !== 2) return;
+
+  if ( ! ( parts[0] === 'startdate' || parts[0] === 'enddate' || parts[0] === 'label') ) return;
+
+  var idSchedule = parseInt(parts[1]);
+  var obj_select = document.getElementById('mod_schedule_list_users_select');
+  var el_startdate = document.getElementById('startdate-' + idSchedule);
+  var el_enddate = document.getElementById('enddate-' + idSchedule);
+  var el_label = document.getElementById('label-' + idSchedule);
+  var id = obj_select.value;
+  var data = {
+    "userId" : id,
+    "idSchedule" : idSchedule,
+    "startdate" : convertLocalDateStringToDatabaseString(el_startdate.value),
+    "enddate" : convertLocalDateStringToDatabaseString(el_enddate.value),
+    "label" : el_label.value
+  };
+
+  post_ajax(window.str_uri + '/rest/moderation/users/user_update_schedule.php', data,
+    (response) => {
+      set_info('Eintrag wurde erfolgreich geändert');
+    },
+
+    (error) => {
+      set_error('Es gab ein Problem');
+    } );
+
+  //console.log(ev.target.id);
 }
 
 
@@ -23,6 +58,8 @@ export function frm_mod_schedules(e) {
   window.selected_app = 'dynamic_content';
   reset_messages();
 
+
+
   get_ajax('moderate_schedule.html', (data) => {
       let widget_div = document.getElementById('dynamic_content');
       widget_div.innerHTML = data;
@@ -31,19 +68,70 @@ export function frm_mod_schedules(e) {
       sel.addEventListener('change', btn_schedules_load_single_user);
       load_users();
       hide_div_by_id('mod_schedule_user_new_pair');
+      var btn = document.getElementById('moderation_button_schedule_create_new');
+      btn.addEventListener('click', create_new_schedule);
     },
 
     (err) => {
       set_error('Es gab einen Fehler: ' + err);
+      return;
     });
+
+
+}
+
+function create_new_schedule () {
+  // get current user, return if none
+  var el_select = document.getElementById('mod_schedule_list_users_select');
+  var idUser = el_select.value;
+
+  if (idUser === undefined) {
+    return;
+  }
+
+  if (idUser === 0) {
+    return;
+  }
+
+  var tempdate = new Date();
+  var month = tempdate.getMonth() + 1;
+  var day = tempdate.getDate();
+
+  if (month < 10) month = '0' + month;
+
+  if (day < 10) day = '0' + day;
+  var startdate = tempdate.getFullYear() + "-" + month + '-' + day;
+  var enddate = tempdate.getFullYear()+5 + "-12-31";
+  var label = "Neuer Plan (" + tempdate.toDateString() + ")";
+
+  var data = {
+    "userId" : idUser,
+    "startdate" : startdate,
+    "enddate" : enddate,
+    "label" : label
+  };
+
+  post_ajax(window.str_uri + '/rest/moderation/users/user_create_schedule.php', data, 
+    (data) => {
+      set_info('Stundenplan erfolgreich angelegt!');
+      btn_schedules_load_single_user(null);
+
+    },
+    (err) => {
+      set_error('Stundenplan konnte nicht angelegt werden');
+    }
+  );
+
 }
 
 export function btn_schedules_load_single_user(e) {
-  e = e || window.event;
-  if (e.preventDefault) {
-    e.preventDefault();
-  } else {
-    e.returnValue = false;
+  if (e){
+    e = e || window.event;
+    if (e.preventDefault) {
+      e.preventDefault();
+    } else {
+      e.returnValue = false;
+    }
   }
 
   var el_button = document.getElementById('moderation_button_schedule_add_new_pair');
@@ -91,7 +179,12 @@ export function btn_schedules_load_single_user(e) {
         el_end.addEventListener("change", moderation_schedule_save);
         col_end.append(el_end);
 
-        col_label.innerHTML = arr[i].label;
+        var el_label = document.createElement('input');
+        el_label.id = "label-" + arr[i].idSchedule;
+        el_label.value = arr[i].label;
+        el_label.addEventListener("change", moderation_schedule_save);
+        col_label.append(el_label);
+
 				col_action.append(btn_edit_schedule);
 
         row.append(col_label);
@@ -252,7 +345,6 @@ export function schedule_save_worktime (ev) {
 
   };
 
-  console.log(data);
 
   post_ajax(window.str_uri + '/rest/moderation/users/user_scheduleitem_update.php', data,
     // success
@@ -299,12 +391,17 @@ export function load_users() {
     empty(document.getElementById('mod_schedule_list_users_select'));
     for (var i = 0; i < arr.length; i++) {
       var el = document.createElement('option');
-      el.text = arr[i].displayname;
+      el.text = string_garbage(arr[i].displayname);
       el.value = arr[i].id;
       document.getElementById('mod_schedule_list_users_select').append(el);
     }
 
-  }, (err) => {
+    btn_schedules_load_single_user(null);
 
-  })
+  }, (err) => {
+    set_error("Benutzerliste konnte nicht geladen werden!")
+    return;
+  });
+
+
 }

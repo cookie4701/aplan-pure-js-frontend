@@ -37,6 +37,14 @@ export function calcTime () {
   }
 }
 
+export function string_garbage(inputstring) {
+  var r = inputstring.replace("ÃÂ©","é");
+  r = r.replace("ÃÂ´", "ô");
+  r = r.replace("ÃÂ¼", "ü");
+
+  return r;
+}
+
 export function convertDatabaseDateStringToLocalDateString (databasedatestring) {
   var parts = databasedatestring.split('-');
   if (parts.length !== 3 ) return 'xxx';
@@ -50,7 +58,7 @@ export function convertLocalDateStringToDatabaseString(localdatestring) {
   var parts = localdatestring.split('.');
   if (parts.length !== 3 ) return 'xxx';
 
-  var database_date_string = parts[2] + '.' + parts[1] + '.' + parts[0];
+  var database_date_string = parts[2] + '-' + parts[1] + '-' + parts[0];
 
   return database_date_string;
 }
