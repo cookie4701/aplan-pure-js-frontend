@@ -1,14 +1,15 @@
 <div class="pure-menu pure-menu-horizontal" id="menu">
 	<ul class="pure-menu-list">
 		<li class="pure-menu-item">
-    	<a href="#" class="pure-menu-link">Home</a>
-    </li>
+			<a href="#" class="pure-menu-link">Home</a>
+		</li>
+		
 		<li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
 			<a href="#" id="menuLink1" class="pure-menu-link">Eigene Einstellungen</a>
 			<ul class="pure-menu-children">
 				<li class="pure-menu-item">
-        	<a href="#" class="pure-menu-link" id="passwordchange">Passwort ändern</a>
-        </li>
+					<a href="#" class="pure-menu-link" id="passwordchange">Passwort ändern</a>
+				</li>
 				<li class="pure-menu-item">
 					<a id="workareas_show" class="pure-menu-link">Arbeitsbereiche bearbeiten</a>
 				</li>

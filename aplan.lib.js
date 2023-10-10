@@ -32,11 +32,6 @@ function attach_handlers() {
 
 
 
-
-
-
-
-
 function get_userinfo() {
   get_ajax(
     window.str_uri + '/rest/workareas/read.php',

@@ -27,6 +27,7 @@ export function frm_create_user(e) {
 
 }
 
+//TODO: allow multiple entries at once
 function get_day_pair(dayname) {
   let r = [];
 
