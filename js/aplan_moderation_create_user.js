@@ -31,11 +31,14 @@ export function frm_create_user(e) {
 function get_day_pair(dayname) {
   let r = [];
 
-  if (document.getElementById('create_user_' + dayname + '_start').value != "" &&
-    document.getElementById('create_user_' + dayname + '_end').value != "") {
+  console.log('createuser_' + dayname + '_start');
 
-    r.push_back(document.getElementById('create_user_' + dayname + '_start').value);
-    r.push_back(document.getElementById('create_user_' + dayname + '_end').value);
+  if (document.getElementById('createuser_' + dayname + '_start').value != "" &&
+    document.getElementById('createuser_' + dayname + '_end').value != "") {
+
+	
+    r.push(document.getElementById('createuser_' + dayname + '_start').value);
+    r.push(document.getElementById('createuser_' + dayname + '_end').value);
   }
 
   return r;
@@ -53,15 +56,15 @@ function create_user(e) {
   window.selected_app = 'create_user';
 
   let data = {
-    "username": document.getElementById('createuser_username'),
-    "displayname": document.getElementById('createuser_displayname'),
-    "email": document.getElementById('createuser_email'),
-    "password": document.getElementById('createuser_password'),
-    "cpassword": document.getElementById('createuser_cpassword'),
-    "startdate": document.getElementById('createuser_startdate'),
-    "hollidays": document.getElementById('createuser_hollidays'),
-    "vacaction": document.getElementById('createuser_vacation'),
-    "drive": document.getElementById('createuser_drive'),
+    "username": document.getElementById('createuser_username').value,
+    "displayname": document.getElementById('createuser_displayname').value,
+    "email": document.getElementById('createuser_email').value,
+    "password": document.getElementById('createuser_password').value,
+    "cpassword": document.getElementById('createuser_cpassword').value,
+    "startdate": document.getElementById('createuser_startdate').value,
+    "hollidays": document.getElementById('createuser_hollidays_remain').value,
+    "vacaction": document.getElementById('createuser_vacation_remain').value,
+    "drive": document.getElementById('createuser_drive').value,
     "monday": get_day_pair("monday"),
     "tuesday": get_day_pair("tuesday"),
     "wednesday": get_day_pair("wednesday"),
