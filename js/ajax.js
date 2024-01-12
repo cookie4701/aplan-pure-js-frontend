@@ -31,6 +31,7 @@ export function get_ajax(url, cb_success, cb_error) {
   var xhr = new XMLHttpRequest();
 
   xhr.onreadystatechange = () => {
+	  console.log(xhr.status);
     // lambda
     if (xhr.readyState === XMLHttpRequest.DONE) {
       // request done

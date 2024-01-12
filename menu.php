@@ -27,6 +27,10 @@
 				<li class="pure-menu-item">
 					<a id="moderate_schedules" class="pure-menu-link">Stundenpläne bearbeiten</a>
 				</li>
+
+				<li class="pure-menu-item">
+					<a id="list_drive_recompensations" class="pure-menu-link">Fahrtkostenentschädigungen</a>
+				</li>
 			</ul>
 		</li>
 

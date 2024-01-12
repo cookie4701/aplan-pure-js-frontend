@@ -8,11 +8,13 @@ import { attach_handler, empty} from "./js/tools.js";
 import { update_password } from "./js/aplan_pwchange.js";
 import {set_error,set_info} from "./js/gui.js";
 import {show_workareas} from "./js/aplan_workareas.js";
+import { frm_moderation_driverecompensation } from "./js/aplan_moderation_drive_recompensation.js";
 
 // global vars
 
-//var window.str_uri = 'REPLACE_URL';
-window.str_uri = "https://testing.jugendbuero.duckdns.org";
+//window.str_uri = 'REPLACE_URL';
+//window.str_uri = "https://testing.jugendbuero.duckdns.org";
+window.str_uri = "https://remote.jugendbuero.be";
 
 window.selected_app = '';
 
@@ -27,7 +29,8 @@ function attach_handlers() {
   attach_handler('btnsubmit_pwchange', update_password);
   attach_handler('workareas_show', show_workareas);
   attach_handler('create_new_user', frm_create_user);
-  attach_handler('moderate_schedules', frm_mod_schedules)
+  attach_handler('moderate_schedules', frm_mod_schedules);
+  attach_handler('list_drive_recompensations', frm_moderation_driverecompensation);
 }
 
 
