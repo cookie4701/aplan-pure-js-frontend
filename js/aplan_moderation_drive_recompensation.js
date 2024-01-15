@@ -36,6 +36,15 @@ function show_user_edit() {
 	edituser.style.display = "block";
 }
 
+function extract_id(str_with_id) {
+	let arr_id = str_with_id.split('-');
+	
+	if (arr_id.length != 2 ) return -1;
+	myid = arr_id[1];
+	return myid;
+}
+
+
 function onChangeValue_user(ev) {
 	let userid = document.getElementById('user_list_recompensation').value;
 	let myid = ev.target.id;
@@ -82,10 +91,12 @@ function lock_user_input_line(id) {
 	let start = document.getElementById(`Start-${id}`);
 	let end = document.getElementById(`End-${id}`);
 	let value = document.getElementById(`Value-${id}`);
+	let delete_id = document.getElementById(`Delete-${id}`);
 
 	start.disabled = true;
 	end.disabled = true;
 	value.disabled = true;
+	delete_id.disable = true;
 	
 }
 
@@ -99,10 +110,12 @@ function unlock_user_input_line(pId) {
 	let start = document.getElementById(`Start-${id}`);
 	let end = document.getElementById(`End-${id}`);
 	let value = document.getElementById(`Value-${id}`);
+	let delete_id = document.getElementById(`Delete-${id}`);
 
 	start.disabled = false;
 	end.disabled = false;
 	value.disabled = false;
+	delete_id.disabled = false;
 	
 }
 
@@ -162,14 +175,41 @@ function onLoadUserDataSuccess(response) {
 		});
 		colValue.appendChild(inputValue);
 
+		let colDelete = document.createElement('td');
+		let btnDelete = document.createElement('button');
+		btnDelete.addEventListener('click', (event) => { onClickBtnDelete(event); });
+		btnDelete.innerHTML = 'X';
+		btnDelete.id = `Delete-${idDrive}`;
+		colDelete.appendChild(btnDelete);
 
 		row.appendChild(colStart);
 		row.appendChild(colEnd);
 		row.appendChild(colValue);
+		row.appendChild(colDelete);
 		table.appendChild(row);
 	}
 
 	unfreeze_user_select();
+}
+
+function onClickBtnDelete(event) {
+	let id = extract_id(event.target.id);
+	let userid = document.getElementById('user_list_recompensation').value;
+	let data = {
+		"userId" : userid
+		"idDrive" : id
+	};
+
+	lock_user_input_line(id);
+
+	get_post(
+		`${window.str_uri}/rest/moderation/drive/delete.php`,
+		data,
+		(response) => {
+			unlock_user_input_line(id);
+		},
+		(errorText) => {}
+	);
 }
 
 function freeze_user_select() {
@@ -188,8 +228,8 @@ function unfreeze_user_select() {
 
 
 function onLoadModuleSuccess(responseText) {
-	let el = document.getElementById('dynamic_content');
-	el.innerHTML = `${responseText}`;
+	//let el = document.getElementById('dynamic_content');
+	//el.innerHTML = `${responseText}`;
 
 	get_ajax(
 		`${window.str_uri}/rest/moderation/users/list.php?orgacode=jbuero2020&page=1&nbritems=100`,

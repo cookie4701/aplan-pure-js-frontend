@@ -1,14 +1,14 @@
 import {moderation_schedule_save} from "./js/aplan_moderation_schedule.lib.js";
-import { get_ajax, post_ajax} from "./js/ajax.js";
-import { frm_mod_schedules } from "./js/aplan_moderation_schedule.lib.js";
-import { frm_create_user } from "./js/aplan_moderation_create_user.js";
-import { reset_messages } from "./js/messages.js";
-import { build_gui, show_only_selected_app, hide_everything, show_app_pwchange } from "./js/gui.js";
-import { attach_handler, empty} from "./js/tools.js";
-import { update_password } from "./js/aplan_pwchange.js";
+import {get_ajax, post_ajax} from "./js/ajax.js";
+import {frm_mod_schedules} from "./js/aplan_moderation_schedule.lib.js";
+import {frm_create_user} from "./js/aplan_moderation_create_user.js";
+import {reset_messages} from "./js/messages.js";
+import {build_gui, show_only_selected_app, hide_everything, show_app_pwchange} from "./js/gui.js";
+import {attach_handler, empty} from "./js/tools.js";
+import {update_password} from "./js/aplan_pwchange.js";
 import {set_error,set_info} from "./js/gui.js";
 import {show_workareas} from "./js/aplan_workareas.js";
-import { frm_moderation_driverecompensation } from "./js/aplan_moderation_drive_recompensation.js";
+import {frm_moderation_driverecompensation} from "./js/aplan_moderation_drive_recompensation.js";
 
 // global vars
 
