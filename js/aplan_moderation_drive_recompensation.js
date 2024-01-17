@@ -147,6 +147,7 @@ function onLoadUserDataSuccess(response) {
 	for (let i = 0; i < data.length; i++ ) {
 		let idDrive = data[i].idDrive;
 		let row = document.createElement('tr');
+		row.id = `Row-${idDrive}`;
 
 		let colStart = document.createElement('td');
 		let inputStart = document.createElement('input');
@@ -190,25 +191,57 @@ function onLoadUserDataSuccess(response) {
 	}
 
 	unfreeze_user_select();
+	let btnClose = document.getElementById('close_user');
+	btnClose.addEventListener('click', (event) => closeUser(event) );
+
+	let btnNewSingle = document.getElementById('click_add_new');
+	btnNewSingle.addEventListener('click', (event) => btn_add_new_single() );
 }
+
+function closeUser(event)
+{
+	hide_user_edit();
+}
+
+function btn_add_new_single() {
+	let data = {
+		"id" : document.getElementById('user_list_recompensation').value,
+		"startdate" : document.getElementById('txt_new_start').value,
+		"enddate" : document.getElementById('txt_new_end').value,
+		"val" : document.getElementById('txt_new_val').value.replace(',','.')
+	};
+
+	ajax_post(
+		`${window.str_uri}/rest/moderation/drive/delete.php`,
+		data,
+		(response) => {
+			onClick_select_user();
+		},
+		(errorText) => { onError(errorText); }
+	);
+
+}
+
 
 function onClickBtnDelete(event) {
 	let id = extract_id(event.target.id);
 	let userid = document.getElementById('user_list_recompensation').value;
 	let data = {
-		"userId" : userid
+		"userId" : userid,
 		"idDrive" : id
 	};
 
 	lock_user_input_line(id);
 
-	get_post(
+	ajax_post(
 		`${window.str_uri}/rest/moderation/drive/delete.php`,
 		data,
 		(response) => {
 			unlock_user_input_line(id);
+			let row = document.getElementById(`Row-${id}`);
+			row.remove();
 		},
-		(errorText) => {}
+		(errorText) => { onError(errorText); }
 	);
 }
 
@@ -228,8 +261,8 @@ function unfreeze_user_select() {
 
 
 function onLoadModuleSuccess(responseText) {
-	//let el = document.getElementById('dynamic_content');
-	//el.innerHTML = `${responseText}`;
+	let el = document.getElementById('dynamic_content');
+	el.innerHTML = `${responseText}`;
 
 	get_ajax(
 		`${window.str_uri}/rest/moderation/users/list.php?orgacode=jbuero2020&page=1&nbritems=100`,
