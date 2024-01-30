@@ -157,6 +157,17 @@
 	margin: 10px;
 }
 
+.division {
+	margin: 10px;
+}
+
+.box-small {
+	width: 100px;
+	display:inline-block;
+	margin-top: 4px;
+	margin-bottom: 4px;
+}
+
 /* button */
 
 .custom-button-primary {

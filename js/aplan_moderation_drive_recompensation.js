@@ -3,7 +3,9 @@ import { build_gui } from './gui.js';
 import { attach_handler, convertLocalDateStringToDatabaseString, convertDatabaseDateStringToLocalDateString } from './tools.js';
 
 export function init_driverecompensations() {
-  document.getElementById('moderation_drive_edit_user').addEventListener('click', drive_edit_user);
+	document.getElementById('moderation_drive_edit_user').addEventListener(
+		'click', drive_edit_user);
+	
 }
 
 function drive_edit_user() {
@@ -40,7 +42,7 @@ function extract_id(str_with_id) {
 	let arr_id = str_with_id.split('-');
 	
 	if (arr_id.length != 2 ) return -1;
-	myid = arr_id[1];
+	let myid = arr_id[1];
 	return myid;
 }
 
@@ -188,14 +190,22 @@ function onLoadUserDataSuccess(response) {
 		row.appendChild(colValue);
 		row.appendChild(colDelete);
 		table.appendChild(row);
+		
 	}
+	let btnNewSingle = document.getElementById('click_add_new');
+
+	console.log(btnNewSingle);
+
+	btnNewSingle.removeEventListener(
+		'click', btn_add_new_single );
+	
+	btnNewSingle.addEventListener(
+		'click', btn_add_new_single );
 
 	unfreeze_user_select();
 	let btnClose = document.getElementById('close_user');
 	btnClose.addEventListener('click', (event) => closeUser(event) );
 
-	let btnNewSingle = document.getElementById('click_add_new');
-	btnNewSingle.addEventListener('click', (event) => btn_add_new_single() );
 }
 
 function closeUser(event)
@@ -204,15 +214,20 @@ function closeUser(event)
 }
 
 function btn_add_new_single() {
+	let s = document.getElementById('txt_new_start').value;
+	let e = document.getElementById('txt_new_end').value;
+	s = convertLocalDateStringToDatabaseString(s);
+	e = convertLocalDateStringToDatabaseString(e);
+
 	let data = {
 		"id" : document.getElementById('user_list_recompensation').value,
-		"startdate" : document.getElementById('txt_new_start').value,
-		"enddate" : document.getElementById('txt_new_end').value,
+		"startdate" : s,
+		"enddate" : e,
 		"val" : document.getElementById('txt_new_val').value.replace(',','.')
 	};
 
-	ajax_post(
-		`${window.str_uri}/rest/moderation/drive/delete.php`,
+	post_ajax(
+		`${window.str_uri}/rest/moderation/drive/create.php`,
 		data,
 		(response) => {
 			onClick_select_user();
@@ -233,7 +248,7 @@ function onClickBtnDelete(event) {
 
 	lock_user_input_line(id);
 
-	ajax_post(
+	post_ajax(
 		`${window.str_uri}/rest/moderation/drive/delete.php`,
 		data,
 		(response) => {
